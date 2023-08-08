@@ -7,8 +7,11 @@ import java.io.IOException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+
+import com.gmd.projectjsf.dto.UsuarioDTO;
 
 /**
  * @author Juan Eduardo Clase que permite controlar el funcionamiento con la
@@ -20,6 +23,9 @@ public class LoginController {
 
 	private String usuario;
 	private String password;
+	
+	@ManagedProperty("#{sessionController}")
+	private SessionController sessionController;
 
 	public void ingresar() {
 		System.out.println("Usuario: " + usuario);
@@ -28,6 +34,12 @@ public class LoginController {
 //			FacesContext.getCurrentInstance().addMessage("formLogin:txtUsuario",
 //					new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario Correcto", ""));
 			try {
+				UsuarioDTO usuarioDTO = new UsuarioDTO();
+				
+				usuarioDTO.setUsuario(usuario);
+				usuarioDTO.setPassword(password);
+				
+				this.sessionController.setUsuarioDTO(usuarioDTO);
 				this.redireccionar("principal.xhtml");
 			} catch (IOException e) {
 				FacesContext.getCurrentInstance().addMessage("formLogin:txtUsuario",
@@ -71,6 +83,14 @@ public class LoginController {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public SessionController getSessionController() {
+		return sessionController;
+	}
+
+	public void setSessionController(SessionController sessionController) {
+		this.sessionController = sessionController;
 	}
 
 }
